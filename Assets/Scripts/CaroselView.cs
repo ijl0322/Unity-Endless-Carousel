@@ -92,15 +92,28 @@ public class CaroselView : MonoBehaviour, IBeginDragHandler, IDragHandler
         if (dragDirection == DragDirection.Right)
         {
             //newPos.x = endItem.position.x - scrollContent.ChildWidth * 1.5f + scrollContent.ItemSpacing;
-            newPos.x = endItem.position.x - (scrollContent.ChildWidth * 1f + scrollContent.ItemSpacing);
+            newPos.x = endItem.position.x - (scrollContent.ChildWidth + scrollContent.ItemSpacing);
         }
         else
         {
-            newPos.x = endItem.position.x + (scrollContent.ChildWidth * 1f + scrollContent.ItemSpacing);
+            newPos.x = endItem.position.x + (scrollContent.ChildWidth + scrollContent.ItemSpacing);
         }
         currItem.position = newPos;
+        print(newPos.x);
+        double currentItemIndex = (newPos.x - 0.5 * scrollContent.ChildWidth) / (scrollContent.ChildWidth + scrollContent.ItemSpacing);
+        print(currentItemIndex);
         currItem.SetSiblingIndex(endItemIndex);
     }
+
+    //private Range CalculateCurrentVisibleRowRange()
+    //{
+    //    float startY = m_scrollY;
+    //    float endY = m_scrollY + (this.transform as RectTransform).rect.height;
+    //    int startIndex = FindIndexOfRowAtY(startY);
+    //    int endIndex = FindIndexOfRowAtY(endY);
+    //    return new Range(startIndex, endIndex - startIndex + 1);
+    //}
+
 
     /// <summary>
     /// Checks if an item has the reached the out of bounds threshold for the scroll view.

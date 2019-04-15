@@ -123,6 +123,7 @@ public class CaroselContent : MonoBehaviour
         {
             Vector2 childPos = rtChildren[i].localPosition;
             childPos.x = posOffset + i * (childWidth + itemSpacing);
+            print(childPos);
             rtChildren[i].localPosition = childPos;
         }
     }
