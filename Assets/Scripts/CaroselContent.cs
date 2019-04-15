@@ -66,7 +66,7 @@ public class CaroselContent : MonoBehaviour
     /// <summary>
     /// The RectTransform components of all the children of this GameObject.
     /// </summary>
-    private RectTransform[] rtChildren;
+    private CaroselCell[] caroselCells;
 
     /// <summary>
     /// The width and height of the parent.
@@ -99,14 +99,14 @@ public class CaroselContent : MonoBehaviour
     {
         if (numberOfItems == 0) { return; }
         rectTransform = GetComponent<RectTransform>();
-        rtChildren = new RectTransform[numberOfItems];
+        caroselCells = new CaroselCell[numberOfItems];
 
         for (int i = 0; i < numberOfItems; i++)
         {
-            RectTransform bookCell = Instantiate(cellPrefab).GetComponent<RectTransform>();
+            CaroselCell bookCell = Instantiate(cellPrefab).GetComponent<CaroselCell>();
             bookCell.name = "BookCell_" + i;
             bookCell.transform.SetParent(rectTransform, false);
-            rtChildren[i] = bookCell;
+            caroselCells[i] = bookCell;
         }
 
         // Subtract the margin from both sides.
@@ -115,16 +115,16 @@ public class CaroselContent : MonoBehaviour
         // Subtract the margin from the top and bottom.
         height = rectTransform.rect.height - (2 * verticalMargin);
 
-        childWidth = rtChildren[0].rect.width;
-        childHeight = rtChildren[0].rect.height;
+        childWidth = caroselCells[0].GetComponent<RectTransform>().rect.width;
+        childHeight = caroselCells[0].GetComponent<RectTransform>().rect.height;
 
         float posOffset = childWidth * 0.5f;
-        for (int i = 0; i < rtChildren.Length; i++)
+        for (int i = 0; i < caroselCells.Length; i++)
         {
-            Vector2 childPos = rtChildren[i].localPosition;
+            caroselCells[i].cellIndex = i;
+            Vector2 childPos = caroselCells[i].GetComponent<RectTransform>().localPosition;
             childPos.x = posOffset + i * (childWidth + itemSpacing);
-            print(childPos);
-            rtChildren[i].localPosition = childPos;
+            caroselCells[i].GetComponent<RectTransform>().localPosition = childPos;
         }
     }
 }

@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class CaroselView : MonoBehaviour, IBeginDragHandler, IDragHandler
 {
-    enum DragDirection { Left, Right, None};
+    enum DragDirection { Left, Right };
     #region Private Members
 
     /// <summary>
@@ -78,20 +78,20 @@ public class CaroselView : MonoBehaviour, IBeginDragHandler, IDragHandler
     /// </summary>
     private void HandleHorizontalScroll()
     {
-        int currItemIndex = dragDirection == DragDirection.Right ? scrollRect.content.childCount - 1 : 0;
+        bool swipeRight = dragDirection == DragDirection.Right;
+        int currItemIndex = swipeRight ? scrollRect.content.childCount - 1 : 0;
         var currItem = scrollRect.content.GetChild(currItemIndex);
         if (!ReachedThreshold(currItem))
         {
             return;
         }
 
-        int endItemIndex = dragDirection == DragDirection.Right ? 0 : scrollRect.content.childCount - 1;
+        int endItemIndex = swipeRight ? 0 : scrollRect.content.childCount - 1;
         Transform endItem = scrollRect.content.GetChild(endItemIndex);
         Vector2 newPos = endItem.position;
 
-        if (dragDirection == DragDirection.Right)
+        if (swipeRight)
         {
-            //newPos.x = endItem.position.x - scrollContent.ChildWidth * 1.5f + scrollContent.ItemSpacing;
             newPos.x = endItem.position.x - (scrollContent.ChildWidth + scrollContent.ItemSpacing);
         }
         else
@@ -99,27 +99,12 @@ public class CaroselView : MonoBehaviour, IBeginDragHandler, IDragHandler
             newPos.x = endItem.position.x + (scrollContent.ChildWidth + scrollContent.ItemSpacing);
         }
         currItem.position = newPos;
-        print(newPos.x);
-        double currentItemIndex = (newPos.x - 0.5 * scrollContent.ChildWidth) / (scrollContent.ChildWidth + scrollContent.ItemSpacing);
-        print(currentItemIndex);
+        int endItemContentIndex = endItem.GetComponent<CaroselCell>().cellIndex;
+        currItem.GetComponent<CaroselCell>().cellIndex = swipeRight ? endItemContentIndex - 1 : endItemContentIndex + 1;
+        currItem.GetComponent<CaroselCell>().bookTitleText.text = "Book " + (swipeRight ? endItemContentIndex - 1 : endItemContentIndex + 1);
         currItem.SetSiblingIndex(endItemIndex);
     }
 
-    //private Range CalculateCurrentVisibleRowRange()
-    //{
-    //    float startY = m_scrollY;
-    //    float endY = m_scrollY + (this.transform as RectTransform).rect.height;
-    //    int startIndex = FindIndexOfRowAtY(startY);
-    //    int endIndex = FindIndexOfRowAtY(endY);
-    //    return new Range(startIndex, endIndex - startIndex + 1);
-    //}
-
-
-    /// <summary>
-    /// Checks if an item has the reached the out of bounds threshold for the scroll view.
-    /// </summary>
-    /// <param name="item">The item to be checked.</param>
-    /// <returns>True if the item has reached the threshold for either ends of the scroll view, false otherwise.</returns>
     private bool ReachedThreshold(Transform item)
     {
         float posXThreshold = transform.position.x + scrollContent.Width * 0.5f;

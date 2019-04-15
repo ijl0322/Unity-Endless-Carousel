@@ -132,6 +132,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cellIndex: -1
+  bookTitleText: {fileID: 8105873583384825214}
 --- !u!1 &8105873583384825212
 GameObject:
   m_ObjectHideFlags: 0
