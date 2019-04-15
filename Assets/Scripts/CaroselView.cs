@@ -14,12 +14,6 @@ public class CaroselView : MonoBehaviour, IBeginDragHandler, IDragHandler
     private CaroselContent scrollContent;
 
     /// <summary>
-    /// How far the items will travel outside of the scroll view before being repositioned.
-    /// </summary>
-    [SerializeField]
-    private float outOfBoundsThreshold;
-
-    /// <summary>
     /// The ScrollRect component for this GameObject.
     /// </summary>
     private ScrollRect scrollRect;
@@ -104,8 +98,6 @@ public class CaroselView : MonoBehaviour, IBeginDragHandler, IDragHandler
         {
             newPos.x = endItem.position.x + (scrollContent.ChildWidth * 1f + scrollContent.ItemSpacing);
         }
-
-        Debug.LogFormat("end item pos {0}, new item pos {1}", endItem.position.x, newPos.x);
         currItem.position = newPos;
         currItem.SetSiblingIndex(endItemIndex);
     }
@@ -117,8 +109,8 @@ public class CaroselView : MonoBehaviour, IBeginDragHandler, IDragHandler
     /// <returns>True if the item has reached the threshold for either ends of the scroll view, false otherwise.</returns>
     private bool ReachedThreshold(Transform item)
     {
-        float posXThreshold = transform.position.x + scrollContent.Width * 0.5f + outOfBoundsThreshold;
-        float negXThreshold = transform.position.x - scrollContent.Width * 0.5f - outOfBoundsThreshold;
+        float posXThreshold = transform.position.x + scrollContent.Width * 0.5f;
+        float negXThreshold = transform.position.x - scrollContent.Width * 0.5f;
         return dragDirection == DragDirection.Right ? item.position.x - scrollContent.ChildWidth * 0.5f > posXThreshold :
             item.position.x + scrollContent.ChildWidth * 0.5f < negXThreshold;
     }

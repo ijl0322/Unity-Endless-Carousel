@@ -1,4 +1,7 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
+using System.Collections;
+using System.Collections.Generic;
 
 public class CaroselContent : MonoBehaviour
 {
@@ -49,6 +52,8 @@ public class CaroselContent : MonoBehaviour
     /// </summary>
     public float ChildHeight { get { return childHeight; } }
 
+    public int numberOfItems;
+
     #endregion
 
     #region Private Members
@@ -85,16 +90,23 @@ public class CaroselContent : MonoBehaviour
     [SerializeField]
     private float horizontalMargin, verticalMargin;
 
+    [SerializeField]
+    private GameObject cellPrefab;
+
     #endregion
 
     private void Start()
     {
+        if (numberOfItems == 0) { return; }
         rectTransform = GetComponent<RectTransform>();
-        rtChildren = new RectTransform[rectTransform.childCount];
+        rtChildren = new RectTransform[numberOfItems];
 
-        for (int i = 0; i < rectTransform.childCount; i++)
+        for (int i = 0; i < numberOfItems; i++)
         {
-            rtChildren[i] = rectTransform.GetChild(i) as RectTransform;
+            RectTransform bookCell = Instantiate(cellPrefab).GetComponent<RectTransform>();
+            bookCell.name = "BookCell_" + i;
+            bookCell.transform.SetParent(rectTransform, false);
+            rtChildren[i] = bookCell;
         }
 
         // Subtract the margin from both sides.
@@ -103,23 +115,14 @@ public class CaroselContent : MonoBehaviour
         // Subtract the margin from the top and bottom.
         height = rectTransform.rect.height - (2 * verticalMargin);
 
-        childWidth = 250;
-        childHeight = 300;
-        InitializeContentHorizontal();
-    }
+        childWidth = rtChildren[0].rect.width;
+        childHeight = rtChildren[0].rect.height;
 
-    /// <summary>
-    /// Initializes the scroll content if the scroll view is oriented horizontally.
-    /// </summary>
-    private void InitializeContentHorizontal()
-    {
-        float originX = 0 - (width * 0.5f);
         float posOffset = childWidth * 0.5f;
         for (int i = 0; i < rtChildren.Length; i++)
         {
             Vector2 childPos = rtChildren[i].localPosition;
-            childPos.x = originX + posOffset + i * (childWidth + itemSpacing);
-            print(childPos.x);
+            childPos.x = posOffset + i * (childWidth + itemSpacing);
             rtChildren[i].localPosition = childPos;
         }
     }
