@@ -29,6 +29,8 @@ public class CaroselContent : MonoBehaviour
     /// </summary>
     public float ChildHeight { get { return childHeight; } }
 
+    public CaroselCell[] CaroselCells {  get { return caroselCells;  } }
+
     public int numberOfCellPrefabs;
 
     #endregion
@@ -72,7 +74,9 @@ public class CaroselContent : MonoBehaviour
 
     #endregion
 
-    private void Start()
+    private void Start() {}
+
+    public void CellsInitialSetup() 
     {
         if (numberOfCellPrefabs == 0) { return; }
         rectTransform = GetComponent<RectTransform>();
