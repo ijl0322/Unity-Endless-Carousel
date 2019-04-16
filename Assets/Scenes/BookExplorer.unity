@@ -160,7 +160,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db02e5795d4bf48d687f66a06a054a98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numberOfItems: 10
+  numberOfCellPrefabs: 15
   itemSpacing: 10
   horizontalMargin: 10
   verticalMargin: 0
@@ -1112,7 +1112,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scrollContent: {fileID: 22488996}
-  outOfBoundsThreshold: 0
 --- !u!1 &1966674870
 GameObject:
   m_ObjectHideFlags: 0

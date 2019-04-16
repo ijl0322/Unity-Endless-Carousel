@@ -28,6 +28,8 @@ public class CaroselView : MonoBehaviour, IBeginDragHandler, IDragHandler
     /// </summary>
     private DragDirection dragDirection;
 
+    public ITCaroselViewDataSource dataSource;
+
     #endregion
 
     private void Start()
@@ -77,7 +79,8 @@ public class CaroselView : MonoBehaviour, IBeginDragHandler, IDragHandler
     /// Called if the scroll view is oriented horizontally.
     /// </summary>
     private void HandleHorizontalScroll()
-    {
+    {   
+        //print(dataSource.GetNumberOfRowsForCaroselView());
         bool swipeRight = dragDirection == DragDirection.Right;
         int currItemIndex = swipeRight ? scrollRect.content.childCount - 1 : 0;
         var currItem = scrollRect.content.GetChild(currItemIndex);
@@ -101,7 +104,6 @@ public class CaroselView : MonoBehaviour, IBeginDragHandler, IDragHandler
         currItem.position = newPos;
         int endItemContentIndex = endItem.GetComponent<CaroselCell>().cellIndex;
         currItem.GetComponent<CaroselCell>().cellIndex = swipeRight ? endItemContentIndex - 1 : endItemContentIndex + 1;
-        currItem.GetComponent<CaroselCell>().bookTitleText.text = "Book " + (swipeRight ? endItemContentIndex - 1 : endItemContentIndex + 1);
         currItem.SetSiblingIndex(endItemIndex);
     }
 

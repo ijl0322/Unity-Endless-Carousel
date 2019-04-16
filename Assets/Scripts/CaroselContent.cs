@@ -7,30 +7,7 @@ public class CaroselContent : MonoBehaviour
 {
     #region Public Properties
 
-    /// <summary>
-    /// How far apart each item is in the scroll view.
-    /// </summary>
     public float ItemSpacing { get { return itemSpacing; } }
-
-    /// <summary>
-    /// How much the items are indented from left and right of the scroll view.
-    /// </summary>
-    public float HorizontalMargin { get { return horizontalMargin; } }
-
-    /// <summary>
-    /// How much the items are indented from top and bottom of the scroll view.
-    /// </summary>
-    public float VerticalMargin { get { return verticalMargin; } }
-
-    /// <summary>
-    /// Is the scroll view oriented horizontally?
-    /// </summary>
-    public bool Horizontal { get { return true; } }
-
-    /// <summary>
-    /// Is the scroll view oriented vertically?
-    /// </summary>
-    public bool Vertical { get { return false; } }
 
     /// <summary>
     /// The width of the scroll content.
@@ -52,7 +29,7 @@ public class CaroselContent : MonoBehaviour
     /// </summary>
     public float ChildHeight { get { return childHeight; } }
 
-    public int numberOfItems;
+    public int numberOfCellPrefabs;
 
     #endregion
 
@@ -97,23 +74,20 @@ public class CaroselContent : MonoBehaviour
 
     private void Start()
     {
-        if (numberOfItems == 0) { return; }
+        if (numberOfCellPrefabs == 0) { return; }
         rectTransform = GetComponent<RectTransform>();
-        caroselCells = new CaroselCell[numberOfItems];
+        caroselCells = new CaroselCell[numberOfCellPrefabs];
 
-        for (int i = 0; i < numberOfItems; i++)
+        for (int i = 0; i < numberOfCellPrefabs; i++)
         {
-            CaroselCell bookCell = Instantiate(cellPrefab).GetComponent<CaroselCell>();
-            bookCell.name = "BookCell_" + i;
-            bookCell.transform.SetParent(rectTransform, false);
-            caroselCells[i] = bookCell;
+            CaroselCell cell = Instantiate(cellPrefab).GetComponent<CaroselCell>();
+            cell.name = "Cell_" + i;
+            cell.transform.SetParent(rectTransform, false);
+            caroselCells[i] = cell;
         }
 
-        // Subtract the margin from both sides.
-        width = rectTransform.rect.width - (2 * horizontalMargin);
-
-        // Subtract the margin from the top and bottom.
-        height = rectTransform.rect.height - (2 * verticalMargin);
+        width = rectTransform.rect.width;
+        height = rectTransform.rect.height;
 
         childWidth = caroselCells[0].GetComponent<RectTransform>().rect.width;
         childHeight = caroselCells[0].GetComponent<RectTransform>().rect.height;
