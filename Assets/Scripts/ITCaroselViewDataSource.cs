@@ -1,5 +1,5 @@
 ﻿public interface ITCaroselViewDataSource
 {
-    int GetNumberOfRowsForCaroselView();
+    int GetNumberOfItemsForCaroselView();
     void UpdateCellInCaroselView(CaroselCell cell, int row);
 }

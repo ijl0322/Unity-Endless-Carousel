@@ -1,36 +1,18 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using System;
 
 public class CaroselView : MonoBehaviour, IBeginDragHandler, IDragHandler
 {
     enum DragDirection { Left, Right };
-    #region Private Members
 
-    /// <summary>
-    /// The ScrollContent component that belongs to the scroll content GameObject.
-    /// </summary>
     [SerializeField]
     private CaroselContent scrollContent;
-
-    /// <summary>
-    /// The ScrollRect component for this GameObject.
-    /// </summary>
     private ScrollRect scrollRect;
-
-    /// <summary>
-    /// The last position where the user has dragged.
-    /// </summary>
     private Vector2 lastDragPosition;
-
-    /// <summary>
-    /// Is the user dragging in the positive axis or the negative axis?
-    /// </summary>
     private DragDirection dragDirection;
-
     public ITCaroselViewDataSource dataSource;
-
-    #endregion
 
     private void Start()
     {
@@ -40,19 +22,11 @@ public class CaroselView : MonoBehaviour, IBeginDragHandler, IDragHandler
         scrollRect.movementType = ScrollRect.MovementType.Unrestricted;
     }
 
-    /// <summary>
-    /// Called when the user starts to drag the scroll view.
-    /// </summary>
-    /// <param name="eventData">The data related to the drag event.</param>
     public void OnBeginDrag(PointerEventData eventData)
     {
         lastDragPosition = eventData.position;
     }
 
-    /// <summary>
-    /// Called while the user is dragging the scroll view.
-    /// </summary>
-    /// <param name="eventData">The data related to the drag event.</param>
     public void OnDrag(PointerEventData eventData)
     { 
         if (eventData.position.x > lastDragPosition.x)
@@ -67,20 +41,13 @@ public class CaroselView : MonoBehaviour, IBeginDragHandler, IDragHandler
         } 
     }
 
-    /// <summary>
-    /// Called when the user is dragging/scrolling the scroll view.
-    /// </summary>
     public void OnViewScroll()
     {
         HandleHorizontalScroll();
     }
 
-    /// <summary>
-    /// Called if the scroll view is oriented horizontally.
-    /// </summary>
     private void HandleHorizontalScroll()
     {   
-        //print(dataSource.GetNumberOfRowsForCaroselView());
         bool swipeRight = dragDirection == DragDirection.Right;
         int currItemIndex = swipeRight ? scrollRect.content.childCount - 1 : 0;
         var currItem = scrollRect.content.GetChild(currItemIndex);
@@ -103,8 +70,14 @@ public class CaroselView : MonoBehaviour, IBeginDragHandler, IDragHandler
         }
         currItem.position = newPos;
         int endItemContentIndex = endItem.GetComponent<CaroselCell>().cellIndex;
-        currItem.GetComponent<CaroselCell>().cellIndex = swipeRight ? endItemContentIndex - 1 : endItemContentIndex + 1;
+        int currentItemCellIndex = swipeRight ? endItemContentIndex - 1 : endItemContentIndex + 1;
+        CaroselCell currentCell = currItem.GetComponent<CaroselCell>();
+        currentCell.cellIndex = currentItemCellIndex;
         currItem.SetSiblingIndex(endItemIndex);
+
+        int totalNumberOfItems = dataSource.GetNumberOfItemsForCaroselView();
+        int itemIndex = (currentItemCellIndex >= 0) ? currentItemCellIndex % totalNumberOfItems : totalNumberOfItems - Math.Abs(currentItemCellIndex % totalNumberOfItems) ;
+        dataSource.UpdateCellInCaroselView(currentCell, itemIndex);
     }
 
     private bool ReachedThreshold(Transform item)

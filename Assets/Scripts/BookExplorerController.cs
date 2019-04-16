@@ -7,23 +7,24 @@ public class BookExplorerController : MonoBehaviour, ITCaroselViewDataSource
     [SerializeField]
     private CaroselView bookCarosel;
 
-    public int GetNumberOfRowsForCaroselView()
+    void Start()
+    {
+        bookCarosel.dataSource = this;   
+    }
+
+    void Update()
+    {
+        
+    }
+
+    public int GetNumberOfItemsForCaroselView()
     {
         return 50;
     }
 
     public void UpdateCellInCaroselView(CaroselCell cell, int row)
     {
-        Debug.LogFormat("Update cell {0}", row);
-    }
-
-    void Start()
-    {
-        //bookCarosel.dataSource = this;   
-    }
-
-    void Update()
-    {
-        
+        BookCell bookCell = cell as BookCell;
+        bookCell.bookTitle.text = "Book " + row;
     }
 }
